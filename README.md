@@ -54,6 +54,10 @@ During deployment, this project is configured, inside `netlify.toml` to run the 
 
 `yarn build` corresponds to the npm script `build`, which uses `npm-run-all` (aka `run-p`) to concurrently run `"build:app"` (aka `react-scripts build`) and `build:lambda` (aka `netlify-lambda build src/lambda`).
 
+### Node 22 / OpenSSL compatibility
+
+Node.js 22 tightened the default OpenSSL configuration, which exposes the fact that `webpack@4` (used by `react-scripts@3`/`netlify-lambda@1`) still relies on the legacy MD4 hash. When Netlify builds against Node 22 you may see `Error: error:0308010C:digital envelope routines::unsupported`. The build script now sets `NODE_OPTIONS=--openssl-legacy-provider` so legacy hashing continues to work. If you prefer not to rely on the legacy provider, use an older Node runtime (for example Node 16 or 18) or upgrade your bundler stack to a webpack 5–based setup (for example by upgrading to newer `react-scripts` and `netlify-lambda` replacements).
+
 ## Typescript
 
 <details>
